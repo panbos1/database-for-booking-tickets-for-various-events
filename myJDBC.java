@@ -15,17 +15,15 @@ public class MyJDBC {
         Statement stmt = con.createStatement();
 
         // SQL to create the Users table
-        String createTableSQL = "CREATE TABLE IF NOT EXISTS Users (" +
-                "id INT AUTO_INCREMENT PRIMARY KEY, " +
-                "username VARCHAR(50) NOT NULL, " +
-                "password VARCHAR(100) NOT NULL)";
-        stmt.executeUpdate(createTableSQL);
+        String createEventTableSQL = "CREATE TABLE IF NOT EXISTS EVENTS (" +
+                "id_εκδήλωσης INT PRIMARY KEY, " +
+                "Όνομα VARCHAR(50) NOT NULL, " +
+                "Ημερομηνία DATE NOT NULL," +
+                "Ώρα TIME NOT NULL, " +
+                "Χωρητικότητα INT NOT NULL" +
+                ")";
 
-        String insertUsersSQL = "INSERT INTO Users (username, password) VALUES " +
-                "('user1', 'password1'), " +
-                "('user2', 'password2')";
-        int rowsInserted = stmt.executeUpdate(insertUsersSQL);
-
+        stmt.executeUpdate(createEventTableSQL);
         
         stmt.close();
         con.close();
