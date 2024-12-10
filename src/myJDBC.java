@@ -5,6 +5,7 @@ public class MyJDBC {
         Συναυλία, Θέατρο, Χορός
     }
 
+
     public enum ConcertType {
         Έντεχνο, Ποπ, Λαϊκό, Παραδοσιακή, Τραπ, Ραπ, Ροκ, Κλασσική
     }
@@ -52,7 +53,7 @@ public class MyJDBC {
 
     public static void createEventsTable(Connection con) {
         String createEventTableSQL =    "CREATE TABLE IF NOT EXISTS Events (" +
-                                        "id_εκδήλωσης INT PRIMARY KEY AUTO_INCREMENT, " +
+                                        "id_εκδήλωσης INT PRIMARY KEY, " +
                                         "Όνομα VARCHAR(255) NOT NULL, " +
                                         "Ημερομηνία DATE NOT NULL," +
                                         "Ώρα TIME NOT NULL, " +
@@ -70,7 +71,7 @@ public class MyJDBC {
 
     public static void createConcertTableSQL(Connection con) {
         String createEventTableSQL =    "CREATE TABLE IF NOT EXISTS Concerts (" +
-                                        "id_εκδήλωσης INT PRIMARY KEY AUTO_INCREMENT, " +
+                                        "id_εκδήλωσης INT PRIMARY KEY, " +
                                         "Είδος ENUM ('Έντεχνο','Ποπ', 'Λαϊκό', 'Παραδοσιακή', 'Τραπ', 'Ραπ', 'Ροκ', 'Κλασσική') NOT NULL," +
                                         "FOREIGN KEY (id_εκδήλωσης) REFERENCES Events(id_εκδήλωσης)" +
                                         ") CHARSET=utf8mb4;";
@@ -115,7 +116,7 @@ public class MyJDBC {
 
     public static void createUserTableSQL(Connection con) {
         String createEventTableSQL =    "CREATE TABLE IF NOT EXISTS Users (" +
-                                        "id_πελάτη INT PRIMARY KEY AUTO_INCREMENT, " +
+                                        "id_πελάτη INT PRIMARY KEY, " +
                                         "Ονοματεπώνυμο VARCHAR(255) NOT NULL, " +
                                         "Τηλέφωνο VARCHAR(255) NOT NULL, " +
                                         "Οδός VARCHAR(255) NOT NULL, " +
@@ -151,7 +152,7 @@ public class MyJDBC {
 
         public static void createTicketTableSQL (Connection con){
             String createEventTableSQL =    "CREATE TABLE IF NOT EXISTS Tickets (" +
-                                            "id_εισιτηρίου INT PRIMARY KEY AUTO_INCREMENT, " +
+                                            "id_εισιτηρίου INT PRIMARY KEY, " +
                                             "Τιμή FLOAT NOT NULL, " +
                                             "Διαθεσιμότητα BOOLEAN NOT NULL, " +
                                             "id_πελάτη INT NOT NULL, " +
@@ -215,7 +216,7 @@ public class MyJDBC {
 
         public static void createReservationTableSQL(Connection con) {
             String createEventTableSQL =    "CREATE TABLE IF NOT EXISTS Reservations (" +
-                                            "id_κράτησης INT PRIMARY KEY AUTO_INCREMENT, " +
+                                            "id_κράτησης INT PRIMARY KEY, " +
                                             "id_πελάτη INT NOT NULL, " +
                                             "id_εκδήλωσης INT NOT NULL, " +
                                             "Αριθμός_Εισιτηρίων INT NOT NULL, " +
@@ -250,35 +251,40 @@ public class MyJDBC {
             stmt.executeUpdate("DELETE FROM Events;");
 
 
-            /*// Insert into Events
-            String insertEventSQL = "INSERT INTO Events (id_εκδήλωσης, Όνομα, Ημερομηνία, Ώρα, Χωρητικότητα, Είδος) VALUES " +
-                    "(1, 'Συναυλία Pop', '2024-12-25', '20:00:00', 1000, 'Συναυλία')";
-            stmt.executeUpdate(insertEventSQL);
+            // Insert into Events
+            String insertEvent1SQL =    "INSERT INTO Events (id_εκδήλωσης, Όνομα, Ημερομηνία, Ώρα, Χωρητικότητα, Είδος) VALUES " +
+                                        "(1, 'ELEFTHEROS TOUR', '2024-12-25', '21:00:00', 5000, 'Συναυλία')";
+            stmt.executeUpdate(insertEvent1SQL);
 
-            // Insert into Concerts
-            String insertConcertSQL = "INSERT INTO Concerts (id_εκδήλωσης, Είδος) VALUES (1, 'Ποπ')";
-            stmt.executeUpdate(insertConcertSQL);
+            // Insert into Events
+            String insertEvent2SQL =    "INSERT INTO Events (id_εκδήλωσης, Όνομα, Ημερομηνία, Ώρα, Χωρητικότητα, Είδος) VALUES " +
+                                        "(2, 'H Κοκκινοσκουφίτσα', '2024-12-28', '18:00:00', 500, 'Θέατρο')";
+            stmt.executeUpdate(insertEvent2SQL);
 
             // Insert into Users
             String insertUser1SQL = "INSERT INTO Users (id_πελάτη, Ονοματεπώνυμο, Τηλέφωνο, Οδός, Αριθμός, ΤΚ, Ημερομηνία_Λήξης, CVV, Αριθμός_Κάρτας, email) VALUES " +
-                    "(1, 'Γιάννης Παπαδόπουλος', '2101234567', 'Σοφοκλή Βενιζέλου', 123, 54623, '2025-12-31', 123, '1234567812345678', 'giannis@example.com')";
+                                    "(1, 'Μαρία Κακουλίδου', '+306943678703', 'Ζωγράφου', 14, 71201, '2025-12-30', 140, '1234567812345679', 'mariakak2001@gmail.com')";
             stmt.executeUpdate(insertUser1SQL);
 
             // Insert into Users
             String insertUser2SQL = "INSERT INTO Users (id_πελάτη, Ονοματεπώνυμο, Τηλέφωνο, Οδός, Αριθμός, ΤΚ, Ημερομηνία_Λήξης, CVV, Αριθμός_Κάρτας, email) VALUES " +
-                    "(2, 'Γιάννης Μαθ', '2101234567', 'Σοφοκλή Βενιζέλου', 123, 54623, '2025-12-31', 123, '1234567812345678', 'giannis@example.com')";
+                                    "(2, 'Παναγιώτα Λάτση', '+306973715931', 'Σήφακα', 8, 71306, '2025-12-31', 666, '1234567812345678', 'pen_lts@yahoo.com')";
             stmt.executeUpdate(insertUser2SQL);
 
             //Insert into Reservations
-            String insertReservationSQL = "INSERT INTO Reservations (id_κράτησης, id_πελάτη, id_εκδήλωσης, Αριθμός_Εισιτηρίων, Ημερομηνία_Κράτησης, Ποσό_Πληρωμής, Google_Apple_Pay, PayPal, Revolut, Credit_Debit_Card) VALUES " +
-                    "(1, 1, 1, 2, '2024-12-01', 50.0, 1, 0, 0, 0)";
+            String insertReservationSQL =   "INSERT INTO Reservations (id_κράτησης, id_πελάτη, id_εκδήλωσης, Αριθμός_Εισιτηρίων, Ημερομηνία_Κράτησης, Ποσό_Πληρωμής, Google_Apple_Pay, PayPal, Revolut, Credit_Debit_Card) VALUES " +
+                                            "(1, 1, 1, 1, '2024-12-01', 100.0, 1, 0, 0, 0)";
             stmt.executeUpdate(insertReservationSQL);
 
             //Insert into Reservations
-            String insertReservation2SQL = "INSERT INTO Reservations (id_κράτησης, id_πελάτη, id_εκδήλωσης, Αριθμός_Εισιτηρίων, Ημερομηνία_Κράτησης, Ποσό_Πληρωμής, Google_Apple_Pay, PayPal, Revolut, Credit_Debit_Card) VALUES " +
-                    "(2, 2, 1, 2, '2024-12-01', 50.0, 1, 0, 0, 0)";
+            String insertReservation2SQL =  "INSERT INTO Reservations (id_κράτησης, id_πελάτη, id_εκδήλωσης, Αριθμός_Εισιτηρίων, Ημερομηνία_Κράτησης, Ποσό_Πληρωμής, Google_Apple_Pay, PayPal, Revolut, Credit_Debit_Card) VALUES " +
+                                            "(2, 2, 1, 1, '2024-12-01', 100.0, 0, 0, 0, 1)";
             stmt.executeUpdate(insertReservation2SQL);
-            */
+
+            //Insert into Reservations
+            String insertReservation3SQL = "INSERT INTO Reservations (id_κράτησης, id_πελάτη, id_εκδήλωσης, Αριθμός_Εισιτηρίων, Ημερομηνία_Κράτησης, Ποσό_Πληρωμής, Google_Apple_Pay, PayPal, Revolut, Credit_Debit_Card) VALUES " +
+                    "(3, 2, 2, 2, '2024-12-02', 50.0, 0, 0, 0, 1)";
+            stmt.executeUpdate(insertReservation3SQL);
 
         } catch (SQLException e) {
             System.err.println("Error inserting test data: " + e.getMessage());
