@@ -27,28 +27,38 @@ public class MyJDBC {
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         String url = new String("jdbc:mysql://localhost");
-        String databaseName = new String("test");
+        //String databaseName = new String("project");
         int port = 3306;
         String username = new String("root");
         String password = new String("");
+        Connection con = DriverManager.getConnection(url + ":" + port + "/");
 
-        Connection con = DriverManager.getConnection(url + ":" + port + "/" + databaseName + "?characterEncoding=UTF-8", username, password);
-        
-        createEventsTable(con);
-        createConcertTableSQL(con);
-        createTheaterTableSQL(con);
-        createDanceTableSQL(con);
-        createUserTableSQL(con);
-        SeatTypeTableSQL(con);
-        createTicketTableSQL(con);
-        createBackstageTableSQL(con);
-        createVipTableSQL(con);
-        createGenikhEisodosTableSQL(con);
-        createReservationTableSQL(con);
-
-        insertTestData(con);
+        try {
+            Statement stmt = con.createStatement();
+            String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS project_360";
+            stmt.executeUpdate(createDatabaseSQL);
+            System.out.println("Database created successfully or already exists.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         con.close();
+
+        //Connection con = DriverManager.getConnection(url + ":" + port + "/" + databaseName + "?characterEncoding=UTF-8", username, password);
+        
+        //createEventsTable(con);
+        //createConcertTableSQL(con);
+        //createTheaterTableSQL(con);
+        //createDanceTableSQL(con);
+        //createUserTableSQL(con);
+        //SeatTypeTableSQL(con);
+        //createTicketTableSQL(con);
+        //createBackstageTableSQL(con);
+        //createVipTableSQL(con);
+        //createGenikhEisodosTableSQL(con);
+        //createReservationTableSQL(con);
+
+        //insertTestData(con);
     }
 
     public static void createEventsTable(Connection con) {
@@ -73,7 +83,7 @@ public class MyJDBC {
         String createEventTableSQL =    "CREATE TABLE IF NOT EXISTS Concerts (" +
                                         "id_εκδήλωσης INT PRIMARY KEY, " +
                                         "Είδος ENUM ('Έντεχνο','Ποπ', 'Λαϊκό', 'Παραδοσιακή', 'Τραπ', 'Ραπ', 'Ροκ', 'Κλασσική') NOT NULL," +
-                                        "FOREIGN KEY (id_εκδήλωσης) REFERENCES Events(id_εκδήλωσης)" +
+                                        "FOREIGN KEY (id_εκδήλωσης) REFERENCES Events(id_εκδήλωσης)"  +
                                         ") CHARSET=utf8mb4;";
         try (Statement stmt = con.createStatement()) {
             // Execute the SQL to create the table
@@ -139,6 +149,7 @@ public class MyJDBC {
     public static void SeatTypeTableSQL (Connection con){
         String createEventTableSQL =    "CREATE TABLE IF NOT EXISTS SeatTypes (" +
                                         "id_θέσης INT PRIMARY KEY, " +
+                                        "Διαθεσιμότητα BOOLEAN NOT NULL, " +
                                         "Είδος ENUM ('Backstage', 'VIP', 'Γενική_Είσοδος') NOT NULL" +
                                         ") CHARSET=utf8mb4; ";
         try (Statement stmt = con.createStatement()) {
@@ -154,7 +165,6 @@ public class MyJDBC {
             String createEventTableSQL =    "CREATE TABLE IF NOT EXISTS Tickets (" +
                                             "id_εισιτηρίου INT PRIMARY KEY, " +
                                             "Τιμή FLOAT NOT NULL, " +
-                                            "Διαθεσιμότητα BOOLEAN NOT NULL, " +
                                             "id_πελάτη INT NOT NULL, " +
                                             "id_θέσης INT NOT NULL, " +
                                             "FOREIGN KEY (id_πελάτη) REFERENCES Users(id_πελάτη), " +
@@ -199,7 +209,7 @@ public class MyJDBC {
             }
         }
 
-        public static void createGenikhEisodosTableSQL(Connection con) {                          // :^)
+        public static void createGenikhEisodosTableSQL(Connection con) {
             String createEventTableSQL =    "CREATE TABLE IF NOT EXISTS GenikhEisodos (" +
                                             "id_εισιτηρίου INT PRIMARY KEY, " +
                                             "Απλή_Θέση BOOLEAN NOT NULL, " +
@@ -249,15 +259,23 @@ public class MyJDBC {
             stmt.executeUpdate("DELETE FROM Users;");
             stmt.executeUpdate("DELETE FROM Concerts;");
             stmt.executeUpdate("DELETE FROM Events;");
+            stmt.executeUpdate("DELETE FROM Theaters;");
+            stmt.executeUpdate("DELETE FROM Dances;");
+            stmt.executeUpdate("DELETE FROM SeatTypes;");
+            stmt.executeUpdate("DELETE FROM Backstage;");
+            stmt.executeUpdate("DELETE FROM VIP;");
+            stmt.executeUpdate("DELETE FROM GenikhEisodos");
 
 
+
+/*
             // Insert into Events
             String insertEvent1SQL =    "INSERT INTO Events (id_εκδήλωσης, Όνομα, Ημερομηνία, Ώρα, Χωρητικότητα, Είδος) VALUES " +
                                         "(1, 'ELEFTHEROS TOUR', '2024-12-25', '21:00:00', 5000, 'Συναυλία')";
             stmt.executeUpdate(insertEvent1SQL);
 
             // Insert into Events
-            String insertEvent2SQL =    "INSERT INTO Events (id_εκδήλωσης, Όνομα, Ημερομηνία, Ώρα, Χωρητικότητα, Είδος) VALUES " +
+            String insertEvent2SQL =    "INSERT INTO Events (id_εκδήλωσης, Όνομα, Ημερομηνία, Ώρα, Χωρητικότητα, Είδος,) VALUES " +
                                         "(2, 'H Κοκκινοσκουφίτσα', '2024-12-28', '18:00:00', 500, 'Θέατρο')";
             stmt.executeUpdate(insertEvent2SQL);
 
@@ -284,7 +302,7 @@ public class MyJDBC {
             //Insert into Reservations
             String insertReservation3SQL = "INSERT INTO Reservations (id_κράτησης, id_πελάτη, id_εκδήλωσης, Αριθμός_Εισιτηρίων, Ημερομηνία_Κράτησης, Ποσό_Πληρωμής, Google_Apple_Pay, PayPal, Revolut, Credit_Debit_Card) VALUES " +
                     "(3, 2, 2, 2, '2024-12-02', 50.0, 0, 0, 0, 1)";
-            stmt.executeUpdate(insertReservation3SQL);
+            stmt.executeUpdate(insertReservation3SQL);*/
 
         } catch (SQLException e) {
             System.err.println("Error inserting test data: " + e.getMessage());

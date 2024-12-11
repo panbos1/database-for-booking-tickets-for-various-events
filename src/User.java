@@ -1,13 +1,12 @@
 import java.sql.*;
 
-
 public class User {
     String query = "SELECT MAX(id_πελάτη) AS max_id FROM users";
     public static int getMaxId(Connection con) {
         try (Statement stmt = con.createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT MAX(id_πελάτη) AS max_id FROM users");
             if (rs.next()) {
-                return rs.getInt("max_id");  //max
+                return rs.getInt("max_id");  //max user_id
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -38,17 +37,4 @@ public class User {
                 e.printStackTrace();
             }
         }
-
-    /*public static int getNextId(Connection con) {
-        String query = "SELECT MAX(id_πελάτη) FROM users";
-        try (Statement stmt = con.createStatement()) {
-            ResultSet rs = stmt.executeQuery(query);
-            if (rs.next()) {
-                return rs.getInt(1) + 1;  // Increment the highest existing ID
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 1;  // Default to 1 if no users exist
-    }*/
 }
