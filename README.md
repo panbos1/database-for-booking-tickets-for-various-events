@@ -1,2 +1,2 @@
-# HY360
-Project for HY360
+# Project about an booking tickets data base for various events 
+Project for lesson HY360
